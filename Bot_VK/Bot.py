@@ -5,7 +5,6 @@ from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 from vk_api.utils import get_random_id
 from _thread import start_new_thread
 import registration as Reg
-import key
 
 class Key():
     def __init__(self,event,payload):
@@ -158,7 +157,7 @@ def creat_keyboard():
     return keyboard.get_keyboard()
 
 
-token=key.key()
+token="bad78e516f3dfe2f9d0a7c93ce6bde07c8321bf79f0eae3d82f7ea545ff4c2a8e1d44144a5cdd689fe8"
 vk_session=vk_api.VkApi(token=token)
 
 
