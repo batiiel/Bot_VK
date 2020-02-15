@@ -131,54 +131,7 @@ class Command():
         otv=eval(kod)
         return otv
 
-
-    def get_sheet(self):
-        h = []
-        k = []
-        pis = True
-        H = []
-        for i in range(11, 31):
-            h.append(self.sheet_val['H' + str(i)].value)
-            k.append(self.sheet_val['K' + str(i)].value)
-        for i in range(0, 20):
-            if h[i] != None and k[i] == None:
-                k[i] = self.sheet_val['O' + str(i + 11)].value
-            if h[i] == None:
-                h[i] = ' '
-            if k[i] == None:
-                k[i] = ' '
-            text = ""
-            t = h[i]
-            for j in t:
-                if j == "(":
-                    pis = False
-                if j == ")":
-                    pis = True
-                if pis and j != ")":
-                    text += j
-            H.append(text)
-        return H
-
-    def get_aud(self):
-        k = []
-        h=self.get_sheet()
-        for i in range(11, 31):
-            k.append(self.sheet_val['K' + str(i)].value)
-        for i in range(0, 20):
-            if h[i] != None and k[i] == None:
-                k[i] = self.sheet_val['O' + str(i + 11)].value
-            if h[i] == None:
-                h[i] = ' '
-            if k[i] == None:
-                k[i] = ' '
-        return k
-
-    def get_weather(self):
-        http = "https://www.gismeteo.ru/weather-gorno-altaysk-5180/"
-        soup = requests.get(http, headers={'User-Agent': UserAgent().chrome})
-        b = bs4.BeautifulSoup(soup.text, "html.parser")
-
-        p = b.findAll('span', class_="unit_temperature_c")
+    def get_weather(self,p,time):
         weather1 = p[8].text+"°"
         weather2 = p[9].text+"°"
         weather3 = p[10].text+"°"
@@ -186,7 +139,6 @@ class Command():
         weather5 = p[12].text+"°"
         weather6 = p[13].text+"°"
 
-        time = b.find_all('div', class_="w_time")
         time1 = time[2].text[0]+":00"
         time2 = time[3].text[:2]+":00"
         time3 = time[4].text[:2]+":00"

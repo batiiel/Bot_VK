@@ -5,6 +5,10 @@ from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 from vk_api.utils import get_random_id
 from _thread import start_new_thread
 import registration as Reg
+import key
+import bs4
+import requests
+from fake_useragent import UserAgent
 
 class Key():
     def __init__(self,event,payload):
@@ -139,8 +143,6 @@ class Key():
 def write_msg(peer_id, random_id, message, keyboard):
     session_api.messages.send(peer_id=peer_id, random_id=random_id, message=message, keyboard=keyboard)
 
-def wr_msg(peer_id,random_id,message):
-    session_api.messages.send(peer_id=peer_id, random_id=random_id, message=message)
 
 def creat_keyboard():
     keyboard=VkKeyboard(one_time=False)
@@ -156,8 +158,13 @@ def creat_keyboard():
     keyboard.add_button("Погода", color=VkKeyboardColor.POSITIVE)
     return keyboard.get_keyboard()
 
+http = "https://www.gismeteo.ru/weather-gorno-altaysk-5180/"
+soup = requests.get(http, headers={'User-Agent': UserAgent().chrome})
+b = bs4.BeautifulSoup(soup.text, "html.parser")
+p = b.findAll('span', class_="unit_temperature_c")
+time = b.find_all('div', class_="w_time")
 
-token="bad78e516f3dfe2f9d0a7c93ce6bde07c8321bf79f0eae3d82f7ea545ff4c2a8e1d44144a5cdd689fe8"
+token=key.key()
 vk_session=vk_api.VkApi(token=token)
 
 
@@ -168,7 +175,7 @@ def handler(event):
     if Reg.search_user(event):
         if event.type == VkBotEventType.MESSAGE_NEW:
             if event.from_user:
-                bot = VkBot(session_api, event.obj)
+                bot = VkBot(session_api, event.obj,p,time)
                 if event.obj.text.upper() == "SANTA-CLOSE":
                     exit()
                 write_msg(event.obj.peer_id, get_random_id(), bot.new_message(event.obj.text), creat_keyboard())
