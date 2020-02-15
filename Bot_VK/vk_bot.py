@@ -1,7 +1,9 @@
 from commander import Command
 
 class VkBot:
-    def __init__(self,session_api,event):
+    def __init__(self,session_api,event,p,time):
+        self.p=p
+        self.time=time
         self.event=event
         self.session_api=session_api
         self._USER_ID=event.peer_id
@@ -24,7 +26,7 @@ class VkBot:
         if message.upper()==self._COMMANDS[0]:
             return f"Привет-привет, {self._USERNAME}!"
         elif message.upper()==self._COMMANDS[1]:
-            return self.Com.get_weather()
+            return self.Com.get_weather(self.p,self.time)
         elif message.upper()==self._COMMANDS[2]:
             return  self.Com.get_time()
         elif message.upper()==self._COMMANDS[3]:
